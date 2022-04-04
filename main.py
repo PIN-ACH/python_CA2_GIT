@@ -1,4 +1,4 @@
-reate a class Employee, and create and test a function to compute net pay from payment, work and tax credit information.
+Create a class Employee, and create and test a function to compute net pay from payment, work and tax credit information.
 
 Employee should have the following attributes:
 StaffID, LastName, FirstName, RegHours, HourlyRate, OTMultiple, TaxCredit, StandardBand,
