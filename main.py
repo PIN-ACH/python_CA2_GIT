@@ -29,18 +29,98 @@ class Employee:
     self.OTMultiple=OTMultiple
     self.TaxCredit=TaxCredit
     self.StandardBand=StandardBand
+
   def computePayment(self,HoursWorked,date):
     tax=0
     higherTax=0
-    totalSalary=self.RegHours*self.HourlyRate
-    if totalSalary<self.StandardBand:
-      tax+=self.StandardBand*0.2
-      higherTax=totalSalary-self.StandardBand
-    tax+=higherTax*0.4
-    return totalSalary-tax
-  
+    otHours=0
+    hourOTpayment=0
+    slrylessthnslab=0
+    finopt={}
+    otHours=HoursWorked-self.RegHours
+    hourOTpayment=self.HourlyRate*self.OTMultiple
+    fullName=(self.FirstName+' '+self.LastName)
     
-    
-abc= Employee(12345,'Green','Joe', 37, 16, 1.5, 72, 710)
 
-print(abc.computePayment(42,'07/10/2022'))
+    # print(hourOTpayment)  #extra pay for overtime
+    if otHours>0:
+      totalOTpayment=otHours*hourOTpayment
+      # print(totalOTpayment)  #total ot payment
+    else:
+      print('notvalid')
+
+    totalSalary=(self.RegHours*self.HourlyRate)+totalOTpayment
+    # print(totalSalary)
+
+ 
+    slrylessthnslab=totalSalary-self.StandardBand
+    # print(slrylessthnslab)
+    if slrylessthnslab>0:
+      higherIncome=totalSalary-self.StandardBand
+      stndrdTax=self.StandardBand*0.2
+      higherTax=higherIncome*0.4
+      tax=stndrdTax+higherTax
+    else:
+      stndrdTax=totalSalary*0.2
+      higherTax=0
+      tax=totalSalary*0.2
+
+    netTax=tax-self.TaxCredit  ##add negative expection handling
+    prsiSum=totalSalary*0.04
+    netDeduction=netTax+prsiSum
+    netPay=totalSalary-netDeduction
+
+ 
+   
+
+    
+    finopt['name']=fullName
+    finopt['Date']=date
+    finopt['Regular Hours Worked']=self.RegHours
+    finopt['Overtime Hours Worked']=otHours
+    finopt['Regular Rate']=self.HourlyRate
+    finopt['Overtime Rate']=hourOTpayment
+    finopt['Regular Pay']=(self.RegHours*self.HourlyRate)
+    finopt['Overtime Pay']=totalOTpayment
+    finopt['Gross Pay']=totalSalary
+    finopt['Standard Rate Pay']=self.StandardBand
+    finopt['Higher Rate Pay']=higherIncome  
+    finopt['Total Tax']=tax
+    finopt['Tax Credit']=self.TaxCredit
+    finopt['Net Tax']=netTax
+    finopt['PRSI']=prsiSum
+    finopt['Net Deductions']=netDeduction
+    finopt['Net Pay']=netPay
+
+    # print(finopt)
+
+    
+    return finopt
+
+ 
+    
+    
+# abc= Employee(12345,'Green','Joe',37,16,1.5,72,710)
+abc= Employee(12345,'Green','Joe',37,14,1.5,72,500)
+print(abc.computePayment(42,'07/01/2022'))
+
+# {'name': 'Joe Green',
+#date--  'Date':'31/10/2021',
+#RegHours--  'Regular Hours Worked':37,
+#otHours-- 'Overtime Hours Worked':5,
+#HourlyRate-- 'Regular Rate':16,
+#hourOTpayment-- 'Overtime Rate':24,
+#(self.RegHours*self.HourlyRate)--  'Regular Pay':592,
+#totalOTpayment-- 'Overtime Pay':120,
+#totalSalary-- 'Gross Pay':712,
+#StandardBand--  'Standard Rate Pay':710,
+#higherTax-- 'Higher Rate Pay':2, ++
+# stndrdTax--'Standard Tax':142, ++
+#higherTax-- 'Higher Tax':0.8, ++
+#tax 'Total Tax':142.8,
+#TaxCredit-- 'Tax Credit':72, 
+#netTax-- 'Net Tax':70.8, 
+#prsiSum-- 'PRSI': 28.48,
+#netDeduction-- 'Net Deductions':99.28,
+#netPay--  'Net Pay': 612.72}
+# Test your class and method thoroughly, and at a minimum include test cases testing the following:
