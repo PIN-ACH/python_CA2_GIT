@@ -48,7 +48,7 @@ class Employee:
     
     # print(hourOTpayment)  #extra pay for overtime
     #overtime pay less thn normal pay
-    if self.OTMultiple<1:
+    if self.OTMultiple<=1:
       try: 
           raise ValueError('Overtime pay can\'t be less than regular pay.')
       except ValueError as e:
@@ -58,14 +58,12 @@ class Employee:
     #overtime less than normal time
     if otHours>0:
       totalOTpayment=otHours*hourOTpayment
+      totalSalary=(self.RegHours*self.HourlyRate)+totalOTpayment
     # print(totalOTpayment)  #total ot payment
-    else:
-      try: 
-          raise ValueError('Overtime Hours  can\'t be less or equal to the normal hours.')
-      except ValueError as e:
-        return e
-
-    totalSalary=(self.RegHours*self.HourlyRate)+totalOTpayment
+    elif otHours<0:
+      totalSalary=(self.RegHours+otHours)*self.HourlyRate
+      totalOTpayment=0
+      otHours=0
     
     slrylessthnslab=totalSalary-self.StandardBand
     
@@ -124,12 +122,13 @@ abc= Employee(12345,'Green','Joe',37,16,1.5,72,710)
 #param missing in employee
 #param extra in employee
 #pamarm in compute  payment
+# regtime and hour worked
 
 #pay cant be negav
 
 # print(abc.computePayment(38,'07/01/2022'))
 # print(abc.computePayment(37,'07/01/2022'))
-print(abc.computePayment(39,'07/01/2022'))
+print(abc.computePayment(35,'07/01/2022'))
 
 # {'name': 'Joe Green',
 #date--  'Date':'31/10/2021',
