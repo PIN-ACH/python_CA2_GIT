@@ -19,6 +19,8 @@
 # Higher Tax cannot be negative.
 # Net Pay cannot be negative.
 
+
+
 class Employee:
   def __init__(self,StaffID,LastName,FirstName,RegHours,HourlyRate,OTMultiple,TaxCredit,StandardBand):
     self.StaffID=StaffID
@@ -36,25 +38,37 @@ class Employee:
     otHours=0
     hourOTpayment=0
     slrylessthnslab=0
+    higherTax=0
+    higherIncome=0
     finopt={}
     otHours=HoursWorked-self.RegHours
     hourOTpayment=self.HourlyRate*self.OTMultiple
     fullName=(self.FirstName+' '+self.LastName)
-    
 
+    
     # print(hourOTpayment)  #extra pay for overtime
+    #overtime pay less thn normal pay
+    if self.OTMultiple<1:
+      try: 
+          raise ValueError('Overtime pay can\'t be less than regular pay.')
+      except ValueError as e:
+        return e
+
+
+    #overtime less than normal time
     if otHours>0:
       totalOTpayment=otHours*hourOTpayment
-      # print(totalOTpayment)  #total ot payment
+    # print(totalOTpayment)  #total ot payment
     else:
-      print('notvalid')
+      try: 
+          raise ValueError('Overtime Hours  can\'t be less or equal to the normal hours.')
+      except ValueError as e:
+        return e
 
     totalSalary=(self.RegHours*self.HourlyRate)+totalOTpayment
-    # print(totalSalary)
-
- 
+    
     slrylessthnslab=totalSalary-self.StandardBand
-    # print(slrylessthnslab)
+    
     if slrylessthnslab>0:
       higherIncome=totalSalary-self.StandardBand
       stndrdTax=self.StandardBand*0.2
@@ -62,47 +76,60 @@ class Employee:
       tax=stndrdTax+higherTax
     else:
       stndrdTax=totalSalary*0.2
-      higherTax=0
       tax=totalSalary*0.2
 
-    netTax=tax-self.TaxCredit  ##add negative expection handling
+    #credit high than tax
+    netTax=tax-self.TaxCredit 
+    if not netTax>0:
+      try: 
+          raise ValueError('Tax Credit higher than tax to be paid')
+      except ValueError as e:
+        return e
+
     prsiSum=totalSalary*0.04
     netDeduction=netTax+prsiSum
     netPay=totalSalary-netDeduction
 
- 
-   
-
-    
     finopt['name']=fullName
     finopt['Date']=date
     finopt['Regular Hours Worked']=self.RegHours
-    finopt['Overtime Hours Worked']=otHours
+    finopt['Overtime Hours Worked']="{:.2f}".format(otHours)
     finopt['Regular Rate']=self.HourlyRate
-    finopt['Overtime Rate']=hourOTpayment
-    finopt['Regular Pay']=(self.RegHours*self.HourlyRate)
-    finopt['Overtime Pay']=totalOTpayment
-    finopt['Gross Pay']=totalSalary
+    finopt['Overtime Rate']="{:.2f}".format(hourOTpayment)
+    finopt['Regular Pay']="{:.2f}".format(self.RegHours*self.HourlyRate)
+    finopt['Overtime Pay']="{:.2f}".format(totalOTpayment)
+    finopt['Gross Pay']="{:.2f}".format(totalSalary)
     finopt['Standard Rate Pay']=self.StandardBand
-    finopt['Higher Rate Pay']=higherIncome  
-    finopt['Total Tax']=tax
+    finopt['Higher Rate Pay']="{:.2f}".format(higherIncome)
+    finopt['Standard Tax']="{:.2f}".format(stndrdTax)
+    finopt['Higher Tax']="{:.2f}".format(higherTax)
+    finopt['Total Tax']="{:.2f}".format(tax)
     finopt['Tax Credit']=self.TaxCredit
-    finopt['Net Tax']=netTax
-    finopt['PRSI']=prsiSum
-    finopt['Net Deductions']=netDeduction
-    finopt['Net Pay']=netPay
-
-    # print(finopt)
-
+    finopt['Net Tax']="{:.2f}".format(netTax)
+    finopt['PRSI']="{:.2f}".format(prsiSum)
+    finopt['Net Deductions']="{:.2f}".format(netDeduction)
+    finopt['Net Pay']="{:.2f}".format(netPay)
     
     return finopt
 
  
     
     
-# abc= Employee(12345,'Green','Joe',37,16,1.5,72,710)
-abc= Employee(12345,'Green','Joe',37,14,1.5,72,500)
-print(abc.computePayment(42,'07/01/2022'))
+abc= Employee(12345,'Green','Joe',37,16,1.5,72,710)
+# abc= Employee(12345,'Green','Joe',37,10,1.1,7,100)
+# abc= Employee(12345,'Green','Joe',100,-1,-1,-100,800)
+#credit high than tax
+#overtime less than normal time
+#overtime pay less thn normal pay
+#param missing in employee
+#param extra in employee
+#pamarm in compute  payment
+
+#pay cant be negav
+
+# print(abc.computePayment(38,'07/01/2022'))
+# print(abc.computePayment(37,'07/01/2022'))
+print(abc.computePayment(39,'07/01/2022'))
 
 # {'name': 'Joe Green',
 #date--  'Date':'31/10/2021',
@@ -114,9 +141,9 @@ print(abc.computePayment(42,'07/01/2022'))
 #totalOTpayment-- 'Overtime Pay':120,
 #totalSalary-- 'Gross Pay':712,
 #StandardBand--  'Standard Rate Pay':710,
-#higherTax-- 'Higher Rate Pay':2, ++
-# stndrdTax--'Standard Tax':142, ++
-#higherTax-- 'Higher Tax':0.8, ++
+#higherTax-- 'Higher Rate Pay':2, 
+# stndrdTax--'Standard Tax':142, 
+#higherTax-- 'Higher Tax':0.8, 
 #tax 'Total Tax':142.8,
 #TaxCredit-- 'Tax Credit':72, 
 #netTax-- 'Net Tax':70.8, 
