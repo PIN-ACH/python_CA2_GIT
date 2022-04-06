@@ -20,6 +20,7 @@
 # Net Pay cannot be negative.
 
 
+import unittest
 
 class Employee:
   def __init__(self,StaffID,LastName,FirstName,RegHours,HourlyRate,OTMultiple,TaxCredit,StandardBand):
@@ -64,6 +65,7 @@ class Employee:
       totalSalary=(self.RegHours+otHours)*self.HourlyRate
       totalOTpayment=0
       otHours=0
+      # print(totalSalary)
     
     slrylessthnslab=totalSalary-self.StandardBand
     
@@ -75,14 +77,20 @@ class Employee:
     else:
       stndrdTax=totalSalary*0.2
       tax=totalSalary*0.2
+    
+    if self.TaxCredit>tax:
+      self.TaxCredit=tax
+      netTax=tax-self.TaxCredit 
+    else:
+      netTax=tax-self.TaxCredit 
 
     #credit high than tax
-    netTax=tax-self.TaxCredit 
-    if not netTax>0:
-      try: 
-          raise ValueError('Tax Credit higher than tax to be paid')
-      except ValueError as e:
-        return e
+    
+    # if not netTax>0:
+    #   try: 
+    #       raise ValueError('Tax Credit higher than tax to be paid')
+    #   except ValueError as e:
+    #     return e
 
     prsiSum=totalSalary*0.04
     netDeduction=netTax+prsiSum
@@ -113,23 +121,18 @@ class Employee:
  
     
     
+  # abc= Employee(12345,'Green','Joe',37,16,1.5,72,710)
+  # print(abc.computePayment(35,'07/01/2022'))
 abc= Employee(12345,'Green','Joe',37,16,1.5,72,710)
-# abc= Employee(12345,'Green','Joe',37,10,1.1,7,100)
-# abc= Employee(12345,'Green','Joe',100,-1,-1,-100,800)
-#credit high than tax
-#overtime less than normal time
-#overtime pay less thn normal pay
-#param missing in employee
-#param extra in employee
-#pamarm in compute  payment
-# regtime and hour worked
+print(abc.computePayment(1,'07/01/2022'))
 
-#pay cant be negav
+class testBasket(unittest.TestCase):
+  def testNetLessEqualGross(self):
+    e=Employee(12345,'Green','Joe',37,16,1.5,72,710)
+    pi=e.computePayment(1,'31/10/2021')
+    self.assertLessEqual(pi['Net Pay'],pi['Gross Pay'])
 
-# print(abc.computePayment(38,'07/01/2022'))
-# print(abc.computePayment(37,'07/01/2022'))
-print(abc.computePayment(35,'07/01/2022'))
-
+unittest.main(argv=['ignored'],exit=False)
 # {'name': 'Joe Green',
 #date--  'Date':'31/10/2021',
 #RegHours--  'Regular Hours Worked':37,
@@ -150,3 +153,17 @@ print(abc.computePayment(35,'07/01/2022'))
 #netDeduction-- 'Net Deductions':99.28,
 #netPay--  'Net Pay': 612.72}
 # Test your class and method thoroughly, and at a minimum include test cases testing the following:
+#  abc= Employee(12345,'Green','Joe',37,10,1.1,7,100)
+# abc= Employee(12345,'Green','Joe',100,-1,-1,-100,800)
+#credit high than tax
+#overtime less than normal time
+#overtime pay less thn normal pay
+#param missing in employee
+#param extra in employee
+#pamarm in compute  payment
+# regtime and hour worked
+
+#pay cant be negav
+
+# print(abc.computePayment(38,'07/01/2022'))
+# print(abc.computePayment(37,'07/01/2022'))
