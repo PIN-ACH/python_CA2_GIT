@@ -49,22 +49,25 @@ class Employee:
     
     # print(hourOTpayment)  #extra pay for overtime
     #overtime pay less thn normal pay
-    if self.OTMultiple<=1:
-      try: 
-          raise ValueError('Overtime pay can\'t be less than regular pay.')
-      except ValueError as e:
-        return e
+    # if self.OTMultiple<=1:
+    #   try: 
+    #       raise ValueError('Overtime pay can\'t be less than regular pay.')
+    #   except ValueError as e:
+    #     return e
 
 
     #overtime less than normal time
+    #if there is overtime and if there is no overtime
     if otHours>0:
       totalOTpayment=otHours*hourOTpayment
       totalSalary=(self.RegHours*self.HourlyRate)+totalOTpayment
     # print(totalOTpayment)  #total ot payment
     elif otHours<0:
       totalSalary=(self.RegHours+otHours)*self.HourlyRate
-      totalOTpayment=0
-      otHours=0
+      totalOTpayment=0              #changing overtime payment to 0 as there was no overtime
+      otHours=0                   #changing overtime hour to 0 as there was no overtime
+      self.RegHours=HoursWorked  #change regular hours to hours worked. less work ws done
+
       # print(totalSalary)
     
     slrylessthnslab=totalSalary-self.StandardBand
@@ -123,14 +126,45 @@ class Employee:
     
   # abc= Employee(12345,'Green','Joe',37,16,1.5,72,710)
   # print(abc.computePayment(35,'07/01/2022'))
-abc= Employee(12345,'Green','Joe',37,16,1.5,72,710)
-print(abc.computePayment(1,'07/01/2022'))
+abc= Employee(12345,'Green','Joe',32,16,1,-10,710)
+print(abc.computePayment(3,'07/01/2022'))
 
-class testBasket(unittest.TestCase):
+
+
+
+
+##test all cases
+# Net pay cannot exceed gross pay 
+class testEmployee(unittest.TestCase):
   def testNetLessEqualGross(self):
     e=Employee(12345,'Green','Joe',37,16,1.5,72,710)
-    pi=e.computePayment(1,'31/10/2021')
-    self.assertLessEqual(pi['Net Pay'],pi['Gross Pay'])
+    testit=e.computePayment(1,'31/10/2021')
+    self.assertLessEqual(testit['Net Pay'],testit['Gross Pay'])
+
+    # Overtime pay or overtime hours cannot be negative.
+  def testGreaterEqualOT(self):
+    e=Employee(12345,'Green','Joe',32,16,-1,72,300)
+    testit=e.computePayment(9,'31/10/2021')
+    self.assertGreaterEqual(testit['Overtime Hours Worked'],testit['Overtime Pay'],'0') #check athe cond#check otpay is converting from - to postv
+
+# Regular Hours Worked cannot exceed hours worked
+  # def testGreaterEqualOT(self):
+  #   e=Employee(12345,'Green','Joe',32,16,-1,72,300)
+  #   testit=e.computePayment(9,'31/10/2021')
+  #   self.assertGreaterEqual(testit['Overtime Hours Worked'],testit['Overtime Pay'],'0')
+
+# Higher Tax cannot be negative.
+  def testHtaxcantbenagative(self):
+    e=Employee(12345,'Green','Joe',37,16,1.5,72,710)
+    testit=e.computePayment(10,'31/10/2021')
+    self.assertGreaterEqual(testit['Higher Tax'],'0')
+
+# Net Pay cannot be negative.
+  def testnetpaycantbenagative(self):
+      e=Employee(12345,'Green','Joe',37,16,1.5,10,710)
+      testit=e.computePayment(1,'31/10/2021')
+      self.assertGreaterEqual(testit['Net Pay'],'0')
+      
 
 unittest.main(argv=['ignored'],exit=False)
 # {'name': 'Joe Green',
