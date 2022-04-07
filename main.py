@@ -46,6 +46,13 @@ class Employee:
     hourOTpayment=self.HourlyRate*self.OTMultiple
     fullName=(self.FirstName+' '+self.LastName)
 
+
+    if self.TaxCredit<0 or self.StandardBand<0 or self.RegHours<0 or   self.HourlyRate<0 or self.OTMultiple<0:
+      try: 
+          raise ValueError('Class entered Values can\'t be negative.')
+      except ValueError as e:
+        return e
+
     
     # print(hourOTpayment)  #extra pay for overtime
     #overtime pay less thn normal pay
@@ -58,17 +65,15 @@ class Employee:
 
     #overtime less than normal time
     #if there is overtime and if there is no overtime
-    if otHours>0:
+    if otHours>=0:
       totalOTpayment=otHours*hourOTpayment
       totalSalary=(self.RegHours*self.HourlyRate)+totalOTpayment
-    # print(totalOTpayment)  #total ot payment
     elif otHours<0:
       totalSalary=(self.RegHours+otHours)*self.HourlyRate
       totalOTpayment=0              #changing overtime payment to 0 as there was no overtime
       otHours=0                   #changing overtime hour to 0 as there was no overtime
       self.RegHours=HoursWorked  #change regular hours to hours worked. less work ws done
 
-      # print(totalSalary)
     
     slrylessthnslab=totalSalary-self.StandardBand
     
@@ -97,7 +102,7 @@ class Employee:
 
     prsiSum=totalSalary*0.04
     netDeduction=netTax+prsiSum
-    netPay=totalSalary-netDeduction
+    netPay=int(totalSalary-netDeduction)
 
     finopt['name']=fullName
     finopt['Date']=date
@@ -113,7 +118,7 @@ class Employee:
     finopt['Standard Tax']="{:.2f}".format(stndrdTax)
     finopt['Higher Tax']="{:.2f}".format(higherTax)
     finopt['Total Tax']="{:.2f}".format(tax)
-    finopt['Tax Credit']=self.TaxCredit
+    finopt['Tax Credit']="{:.2f}".format(self.TaxCredit)
     finopt['Net Tax']="{:.2f}".format(netTax)
     finopt['PRSI']="{:.2f}".format(prsiSum)
     finopt['Net Deductions']="{:.2f}".format(netDeduction)
@@ -126,8 +131,8 @@ class Employee:
     
   # abc= Employee(12345,'Green','Joe',37,16,1.5,72,710)
   # print(abc.computePayment(35,'07/01/2022'))
-abc= Employee(12345,'Green','Joe',32,16,1,-10,710)
-print(abc.computePayment(3,'07/01/2022'))
+abc= Employee(3,'Marilynn','eden',32,16,2,72,300)
+print(abc.computePayment(32,'07/01/2022'))
 
 
 
@@ -137,31 +142,31 @@ print(abc.computePayment(3,'07/01/2022'))
 # Net pay cannot exceed gross pay 
 class testEmployee(unittest.TestCase):
   def testNetLessEqualGross(self):
-    e=Employee(12345,'Green','Joe',37,16,1.5,72,710)
+    e=Employee(1,'David','Mark',37,16,1.5,72,710)
     testit=e.computePayment(1,'31/10/2021')
     self.assertLessEqual(testit['Net Pay'],testit['Gross Pay'])
 
     # Overtime pay or overtime hours cannot be negative.
   def testGreaterEqualOT(self):
-    e=Employee(12345,'Green','Joe',32,16,-1,72,300)
+    e=Employee(2,'cuff','Jack',32,16,3,72,300)
     testit=e.computePayment(9,'31/10/2021')
     self.assertGreaterEqual(testit['Overtime Hours Worked'],testit['Overtime Pay'],'0') #check athe cond#check otpay is converting from - to postv
 
 # Regular Hours Worked cannot exceed hours worked
-  # def testGreaterEqualOT(self):
-  #   e=Employee(12345,'Green','Joe',32,16,-1,72,300)
-  #   testit=e.computePayment(9,'31/10/2021')
-  #   self.assertGreaterEqual(testit['Overtime Hours Worked'],testit['Overtime Pay'],'0')
+  def testhrslessthnhrswork(self):
+    e=Employee(3,'Marilynn','eden',32,16,2,72,300)
+    testit=e.computePayment(12,'31/10/2021')
+    self.assertLessEqual(testit['Regular Hours Worked'],12) 
 
 # Higher Tax cannot be negative.
   def testHtaxcantbenagative(self):
-    e=Employee(12345,'Green','Joe',37,16,1.5,72,710)
-    testit=e.computePayment(10,'31/10/2021')
+    e=Employee(4,'Willard','Gael',37,16,1.5,72,710)
+    testit=e.computePayment(56,'31/10/2021')
     self.assertGreaterEqual(testit['Higher Tax'],'0')
 
 # Net Pay cannot be negative.
   def testnetpaycantbenagative(self):
-      e=Employee(12345,'Green','Joe',37,16,1.5,10,710)
+      e=Employee(5,'Cornelius','Sabrina',37,16,1.5,10,710)
       testit=e.computePayment(1,'31/10/2021')
       self.assertGreaterEqual(testit['Net Pay'],'0')
       
