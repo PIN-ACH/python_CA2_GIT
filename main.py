@@ -102,7 +102,9 @@ class Employee:
 
     prsiSum=totalSalary*0.04
     netDeduction=netTax+prsiSum
-    netPay=int(totalSalary-netDeduction)
+    netPay=totalSalary-netDeduction
+ 
+
 
     finopt['name']=fullName
     finopt['Date']=date
@@ -123,16 +125,17 @@ class Employee:
     finopt['PRSI']="{:.2f}".format(prsiSum)
     finopt['Net Deductions']="{:.2f}".format(netDeduction)
     finopt['Net Pay']="{:.2f}".format(netPay)
-    
     return finopt
+    
 
  
     
     
   # abc= Employee(12345,'Green','Joe',37,16,1.5,72,710)
   # print(abc.computePayment(35,'07/01/2022'))
-abc= Employee(3,'Marilynn','eden',32,16,2,72,300)
-print(abc.computePayment(32,'07/01/2022'))
+# abc= Employee(3,'Marilynn','eden',35,16,2,72,312)
+abc= Employee(12345,'Green','Joe', 37, 16, 1.5, 72, 710)
+print(abc.computePayment(42,'07/01/2022'))
 
 
 
@@ -146,12 +149,14 @@ class testEmployee(unittest.TestCase):
     testit=e.computePayment(1,'31/10/2021')
     self.assertLessEqual(testit['Net Pay'],testit['Gross Pay'])
 
+
     # Overtime pay or overtime hours cannot be negative.
   def testGreaterEqualOT(self):
-    e=Employee(2,'cuff','Jack',32,16,3,72,300)
+    e=Employee(2,'cuff','Jack',32,16,2,72,300)
     testit=e.computePayment(9,'31/10/2021')
-    self.assertGreaterEqual(testit['Overtime Hours Worked'],testit['Overtime Pay'],'0') #check athe cond#check otpay is converting from - to postv
-
+    self.assertGreaterEqual(testit['Overtime Hours Worked'],'0') #check athe cond#check otpay is converting from - to postv
+    self.assertGreaterEqual(testit['Overtime Pay'],'0')
+    
 # Regular Hours Worked cannot exceed hours worked
   def testhrslessthnhrswork(self):
     e=Employee(3,'Marilynn','eden',32,16,2,72,300)
