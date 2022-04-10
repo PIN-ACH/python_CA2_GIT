@@ -173,37 +173,3 @@ class testEmployee(unittest.TestCase):
       
 
 unittest.main(argv=['ignored'],exit=False)
-# {'name': 'Joe Green',
-#date--  'Date':'31/10/2021',
-#RegHours--  'Regular Hours Worked':37,
-#otHours-- 'Overtime Hours Worked':5,
-#HourlyRate-- 'Regular Rate':16,
-#hourOTpayment-- 'Overtime Rate':24,
-#(self.RegHours*self.HourlyRate)--  'Regular Pay':592,
-#totalOTpayment-- 'Overtime Pay':120,
-#totalSalary-- 'Gross Pay':712,
-#StandardBand--  'Standard Rate Pay':710,
-#higherTax-- 'Higher Rate Pay':2, 
-# stndrdTax--'Standard Tax':142, 
-#higherTax-- 'Higher Tax':0.8, 
-#tax 'Total Tax':142.8,
-#TaxCredit-- 'Tax Credit':72, 
-#netTax-- 'Net Tax':70.8, 
-#prsiSum-- 'PRSI': 28.48,
-#netDeduction-- 'Net Deductions':99.28,
-#netPay--  'Net Pay': 612.72}
-# Test your class and method thoroughly, and at a minimum include test cases testing the following:
-#  abc= Employee(12345,'Green','Joe',37,10,1.1,7,100)
-# abc= Employee(12345,'Green','Joe',100,-1,-1,-100,800)
-#credit high than tax
-#overtime less than normal time
-#overtime pay less thn normal pay
-#param missing in employee
-#param extra in employee
-#pamarm in compute  payment
-# regtime and hour worked
-
-#pay cant be negav
-
-# print(abc.computePayment(38,'07/01/2022'))
-# print(abc.computePayment(37,'07/01/2022'))
