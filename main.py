@@ -41,101 +41,93 @@ class Employee:
     slrylessthnslab=0
     higherTax=0
     higherIncome=0
-    finopt={}
-    otHours=HoursWorked-self.RegHours
-    hourOTpayment=self.HourlyRate*self.OTMultiple
-    fullName=(self.FirstName+' '+self.LastName)
+    finalOutput={}
+    otHours=HoursWorked-self.RegHours                #difference between  regular hour and actual hours worked 
+    hourOTpayment=self.HourlyRate*self.OTMultiple     #overtime payment  per hour
+    fullName=(self.FirstName+' '+self.LastName)         #Name concatination
 
+    
 
-    if self.TaxCredit<0 or self.StandardBand<0 or self.RegHours<0 or   self.HourlyRate<0 or self.OTMultiple<0:
+    if self.TaxCredit<0 or self.StandardBand<0 or self.RegHours<0 or self.OTMultiple<0 or self.HourlyRate<0:  #values entered can't be negative.
       try: 
           raise ValueError('Class entered Values can\'t be negative.')
       except ValueError as e:
         return e
-
-    
-    # print(hourOTpayment)  #extra pay for overtime
-    #overtime pay less thn normal pay
-    # if self.OTMultiple<=1:
-    #   try: 
-    #       raise ValueError('Overtime pay can\'t be less than regular pay.')
-    #   except ValueError as e:
-    #     return e
+        
+    if HoursWorked>168 or self.RegHours>168:
+     try: 
+      raise ValueError('A week can\'t have have hours more than 168')
+     except ValueError as e:
+      return e
 
 
-    #overtime less than normal time
-    #if there is overtime and if there is no overtime
-    if otHours>=0:
-      totalOTpayment=otHours*hourOTpayment
-      totalSalary=(self.RegHours*self.HourlyRate)+totalOTpayment
-    elif otHours<0:
+    #if there is overtime and if there is under hours
+    if otHours>=0: #for overtime
+      totalOTpayment=otHours*hourOTpayment                           #overtime hrs worked into per hour overtime payment
+      totalSalary=(self.RegHours*self.HourlyRate)+totalOTpayment     #gross income with OT
+    elif otHours<0:   #for under hours worked
       totalSalary=(self.RegHours+otHours)*self.HourlyRate
-      totalOTpayment=0              #changing overtime payment to 0 as there was no overtime
-      otHours=0                   #changing overtime hour to 0 as there was no overtime
-      self.RegHours=HoursWorked  #change regular hours to hours worked. less work ws done
+      totalOTpayment=0                                                #changing overtime payment to 0 as there was no overtime
+      otHours=0                                                       #changing overtime hour to 0 as there was no overtime
+      self.RegHours=HoursWorked                                       #change regular hours to hours worked. less work was done
 
     
-    slrylessthnslab=totalSalary-self.StandardBand
+    slrylessthnslab=totalSalary-self.StandardBand                      #gross salary and the band difference
     
-    if slrylessthnslab>0:
-      higherIncome=totalSalary-self.StandardBand
-      stndrdTax=self.StandardBand*0.2
-      higherTax=higherIncome*0.4
-      tax=stndrdTax+higherTax
-    else:
-      stndrdTax=totalSalary*0.2
-      tax=totalSalary*0.2
+    if slrylessthnslab>0:                                               #if the difference is positive
+      higherIncome=totalSalary-self.StandardBand                        #calculate higher income
+      stndrdTax=self.StandardBand*0.2                                   #Calculate total amount of tax on standard income
+      higherTax=higherIncome*0.4                                        #Calculate total amount of tax on higher income
+      tax=stndrdTax+higherTax                                           #sum the taxes for tot tax deduction
+    else:                                                               #if the difference is negative
+      stndrdTax=totalSalary*0.2                                         #calculate standard tax
+      tax=totalSalary*0.2                                               #calculate tot tax which is same as standard tax in this case
     
-    if self.TaxCredit>tax:
-      self.TaxCredit=tax
-      netTax=tax-self.TaxCredit 
-    else:
-      netTax=tax-self.TaxCredit 
+    if self.TaxCredit>tax:                                              #if tax credit is greater than tax 
+      self.TaxCredit=tax                                                #tax and credit will be same 
+      netTax=tax-self.TaxCredit                                         #tax will be 0, remaing credit will be deducted from next pay
+    else:                                                               #if tax is greater than credit
+      netTax=tax-self.TaxCredit                                         #deduct tax from credit
 
-    #credit high than tax
-    
-    # if not netTax>0:
-    #   try: 
-    #       raise ValueError('Tax Credit higher than tax to be paid')
-    #   except ValueError as e:
-    #     return e
 
-    prsiSum=totalSalary*0.04
-    netDeduction=netTax+prsiSum
-    netPay=totalSalary-netDeduction
+    prsiSum=totalSalary*0.04                                            #calculate prsi on gross salary
+    netDeduction=netTax+prsiSum                                         #deduct prsi from gross incomee
+    netPay=totalSalary-netDeduction                                     #net payment 
  
 
 
-    finopt['name']=fullName
-    finopt['Date']=date
-    finopt['Regular Hours Worked']=self.RegHours
-    finopt['Overtime Hours Worked']="{:.2f}".format(otHours)
-    finopt['Regular Rate']=self.HourlyRate
-    finopt['Overtime Rate']="{:.2f}".format(hourOTpayment)
-    finopt['Regular Pay']="{:.2f}".format(self.RegHours*self.HourlyRate)
-    finopt['Overtime Pay']="{:.2f}".format(totalOTpayment)
-    finopt['Gross Pay']="{:.2f}".format(totalSalary)
-    finopt['Standard Rate Pay']=self.StandardBand
-    finopt['Higher Rate Pay']="{:.2f}".format(higherIncome)
-    finopt['Standard Tax']="{:.2f}".format(stndrdTax)
-    finopt['Higher Tax']="{:.2f}".format(higherTax)
-    finopt['Total Tax']="{:.2f}".format(tax)
-    finopt['Tax Credit']="{:.2f}".format(self.TaxCredit)
-    finopt['Net Tax']="{:.2f}".format(netTax)
-    finopt['PRSI']="{:.2f}".format(prsiSum)
-    finopt['Net Deductions']="{:.2f}".format(netDeduction)
-    finopt['Net Pay']="{:.2f}".format(netPay)
-    return finopt
+    finalOutput['name']=fullName
+    finalOutput['Date']=date
+    finalOutput['Regular Hours Worked']=self.RegHours
+    finalOutput['Overtime Hours Worked']="{:.2f}".format(otHours)
+    finalOutput['Regular Rate']=self.HourlyRate
+    finalOutput['Overtime Rate']="{:.2f}".format(hourOTpayment)
+    finalOutput['Regular Pay']="{:.2f}".format(self.RegHours*self.HourlyRate)
+    finalOutput['Overtime Pay']="{:.2f}".format(totalOTpayment)
+    finalOutput['Gross Pay']="{:.2f}".format(totalSalary)
+    finalOutput['Standard Rate Pay']=self.StandardBand
+    finalOutput['Higher Rate Pay']="{:.2f}".format(higherIncome)
+    finalOutput['Standard Tax']="{:.2f}".format(stndrdTax)
+    finalOutput['Higher Tax']="{:.2f}".format(higherTax)
+    finalOutput['Total Tax']="{:.2f}".format(tax)
+    finalOutput['Tax Credit']="{:.2f}".format(self.TaxCredit)
+    finalOutput['Net Tax']="{:.2f}".format(netTax)
+    finalOutput['PRSI']="{:.2f}".format(prsiSum)
+    finalOutput['Net Deductions']="{:.2f}".format(netDeduction)
+    finalOutput['Net Pay']="{:.2f}".format(netPay)
+    return finalOutput
     
 
  
     
     
-  # abc= Employee(12345,'Green','Joe',37,16,1.5,72,710)
-  # print(abc.computePayment(35,'07/01/2022'))
-# abc= Employee(3,'Marilynn','eden',35,16,2,72,312)
-abc= Employee(12345,'Green','Joe', 37, 16, 1.5, 72, 710)
-print(abc.computePayment(42,'07/01/2022'))
+ #obj for employee1 
+emp1= Employee(12345,'Green','Joe', 37, 16, 1.5, 72, 710)
+print(emp1.computePayment(42,'07/01/2022'))
+
+#obj for employee2
+emp2= Employee(5,'Howland','Tom',35,16,1.1,10,500)
+print(emp2.computePayment(33,'07/01/2022'))
 
 
 
@@ -152,9 +144,9 @@ class testEmployee(unittest.TestCase):
 
     # Overtime pay or overtime hours cannot be negative.
   def testGreaterEqualOT(self):
-    e=Employee(2,'cuff','Jack',32,16,2,72,300)
-    testit=e.computePayment(9,'31/10/2021')
-    self.assertGreaterEqual(testit['Overtime Hours Worked'],'0') #check athe cond#check otpay is converting from - to postv
+    e=Employee(2,'cuff','Jack',32,16,1,72,300)   #####fix
+    testit=e.computePayment(50,'31/10/2021')
+    self.assertGreaterEqual(testit['Overtime Hours Worked'],'0') 
     self.assertGreaterEqual(testit['Overtime Pay'],'0')
     
 # Regular Hours Worked cannot exceed hours worked
@@ -165,7 +157,7 @@ class testEmployee(unittest.TestCase):
 
 # Higher Tax cannot be negative.
   def testHtaxcantbenagative(self):
-    e=Employee(4,'Willard','Gael',37,16,1.5,72,710)
+    e=Employee(4,'Willard','Gael',37,16,1.5,72,100)
     testit=e.computePayment(56,'31/10/2021')
     self.assertGreaterEqual(testit['Higher Tax'],'0')
 
@@ -174,6 +166,8 @@ class testEmployee(unittest.TestCase):
       e=Employee(5,'Cornelius','Sabrina',37,16,1.5,10,710)
       testit=e.computePayment(1,'31/10/2021')
       self.assertGreaterEqual(testit['Net Pay'],'0')
+
+
       
 
 unittest.main(argv=['ignored'],exit=False)
