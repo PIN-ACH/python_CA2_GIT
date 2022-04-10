@@ -49,16 +49,12 @@ class Employee:
     
 
     if self.TaxCredit<0 or self.StandardBand<0 or self.RegHours<0 or self.OTMultiple<0 or self.HourlyRate<0:  #values entered can't be negative.
-      try: 
-          raise ValueError('Class entered Values can\'t be negative.')
-      except ValueError as e:
-        return e
+      raise ValueError('Class entered Values can\'t be negative.')
+     
         
     if HoursWorked>168 or self.RegHours>168:
-     try: 
       raise ValueError('A week can\'t have have hours more than 168')
-     except ValueError as e:
-      return e
+
 
 
     #if there is overtime and if there is under hours
@@ -143,15 +139,15 @@ class testEmployee(unittest.TestCase):
 
 
     # Overtime pay or overtime hours cannot be negative.
-  def testGreaterEqualOT(self):
-    e=Employee(2,'cuff','Jack',32,16,1,72,300)   #####fix
-    testit=e.computePayment(50,'31/10/2021')
-    self.assertGreaterEqual(testit['Overtime Hours Worked'],'0') 
-    self.assertGreaterEqual(testit['Overtime Pay'],'0')
+  def testOThoursorpaynotnegative(self):
+    with self.assertRaises(ValueError):
+      e=Employee(2,'Auff','Jack',32,16,-1,72,300)   
+      testit=e.computePayment(50,'31/10/2021')
+
     
 # Regular Hours Worked cannot exceed hours worked
   def testhrslessthnhrswork(self):
-    e=Employee(3,'Marilynn','eden',32,16,2,72,300)
+    e=Employee(3,'Marilynn','Eden',32,16,2,72,300)
     testit=e.computePayment(12,'31/10/2021')
     self.assertLessEqual(testit['Regular Hours Worked'],12) 
 
@@ -166,6 +162,12 @@ class testEmployee(unittest.TestCase):
       e=Employee(5,'Cornelius','Sabrina',37,16,1.5,10,710)
       testit=e.computePayment(1,'31/10/2021')
       self.assertGreaterEqual(testit['Net Pay'],'0')
+  
+  # Week hours exceedinn
+  def testweekhourmorethan168(self):
+    with self.assertRaises(ValueError):
+       e=Employee(5,'Cornelius','Kumar',178,16,1.5,10,710)
+       testit=e.computePayment(3,'31/10/2021')
 
 
       
